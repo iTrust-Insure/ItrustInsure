@@ -89,9 +89,6 @@ const main = async () => {
             }
           );
 
-        var coverId = tx.events['ITrustCoverBought'].returnValues.coverId ;
-        console.log("Cover purchased: ", coverId);
-
         console.log("Getting Covers For User ", quote.id);
         var coversResponse = await fetch(`${getCoversEndpoint}${quote.id}`, coversRequestOptions);
         var coversAsText = await coversResponse.text();
