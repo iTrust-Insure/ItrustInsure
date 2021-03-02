@@ -35,7 +35,7 @@ Provides a list of contracts that can be covered to display within your app.
 Example Call:
 
     curl --location --request GET '<INSERT API URL HERE>'/covers \
-    --header 'x-api-key: 7f9739cb-144e-43b1-8051-89e9328f8243'
+    --header 'x-api-key: <INSERT API KEY HERE>'
 
 Example Response:
 
@@ -70,7 +70,7 @@ Returns the available capacity for a particular contract in ETH. Based on availa
 Example Call:
 
     curl --location --request GET '<INSERT API URL HERE>/covers/capacity/0x519b70055af55A007110B4Ff99b0eA33071c720a' \
-    --header 'x-api-key: 7f9739cb-144e-43b1-8051-89e9328f8243'
+    --header 'x-api-key: <INSERT API KEY HERE>'
 
 Example Response:
 
@@ -85,7 +85,7 @@ Get a signed quote to use as part of the `buyCover` process
 Example Call:
 
     curl --location --request POST '<INSERT API URL HERE>/quote' \
-    --header 'x-api-key: 7f9739cb-144e-43b1-8051-89e9328f8243' \
+    --header 'x-api-key: <INSERT API KEY HERE>' \
     --header 'Content-Type: application/json' \
     --data-raw '{
     "email": "user@domain.com",
@@ -113,7 +113,7 @@ Get a list of all covers bought by a specific user.
 Example Call:
 
     curl --location --request GET '<INSERT API URL HERE>/covers/<INSERT USERGUID HERE>' \
-    --header 'x-api-key: 7f9739cb-144e-43b1-8051-89e9328f8243
+    --header 'x-api-key: <INSERT API KEY HERE>
 **USERGUID**: returned as id from quote
 
 Example Response:
@@ -140,7 +140,7 @@ Example Response:
 ### mainnet
     TBC
 ### kovan
-    0x9Cf41A0A55564dFf2f7fa4785b714Df52f77A95B
+    0x427A357C0Db5C57eC893BFe147ba83260e32d898
 
 ### Buy Cover
 Allows users to buy NexusMutual cover.
@@ -174,7 +174,7 @@ Before running the example scripts you will need to rename the `.env.sample` to 
 	NODE_URL=YOUR_NODE_URL
 	API_ENDPOINT= https://kovan.itrust.insure/api
 	API_KEY=YOUR_API_KEY_SUPPLIED_BY_ITRUST
-	ITRUST_CONTRACT_ADDRESS=0x9Cf41A0A55564dFf2f7fa4785b714Df52f77A95B
+	ITRUST_CONTRACT_ADDRESS=0x427A357C0Db5C57eC893BFe147ba83260e32d898
 	TREASURY_ADDRESS=YOUR_TREASURY_ADDRESS_SUPPLIED_TO_ITRUST
 	PURCHASER_PRIVATE_KEY=YOUR_TEST_ADDRESS_PRIVATE_KEY_USED_TO_PURCHASE_COVER
 	QUOTE_EMAIL=YOUR_EMAIL_ADDRESS_FOR_THE_QUOTE
