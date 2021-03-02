@@ -21,7 +21,6 @@ const main = async () => {
 
         console.log("Cover capacity: ", coverCapacity);
 
-        return quote;
     } catch (e) {
         console.log("The following error occured:", e);
     }
