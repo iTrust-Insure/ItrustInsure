@@ -21,7 +21,6 @@ const main = async () => {
 
         console.log("Covers: ", covers);
 
-        return quote;
     } catch (e) {
         console.log("The following error occured:", e);
     }
