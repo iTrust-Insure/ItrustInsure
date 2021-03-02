@@ -3,7 +3,12 @@
 ## Registration
 To register and start selling NexusMutual cover without KYC.
 To register for our service please contact: **itrust**
-    
+
+## Workflow
+Recommended workflow for integrating with iTrust Insure.
+
+![WorkFlow](iTrustInsure-ExchangeWorkflow.png)
+
 ## iTrust Insure API
 To enable users to `buyCover` a signed price quote is currently necessary.
 ### Live URL
@@ -131,11 +136,11 @@ Example Response:
     ]
 
 ## Smart Contract 
-### Addresses
+### iTrust Insure Smart Contract Network Address
 ### mainnet
     TBC
 ### kovan
-    TBC
+    0x9Cf41A0A55564dFf2f7fa4785b714Df52f77A95B
 
 ### Buy Cover
 Allows users to buy NexusMutual cover.
@@ -155,6 +160,8 @@ coverData: Signature returned from quote api end point
 userGUID: id returned from quote api end point
 coverType: 0 (only zero supported) 
 
+See examples below for details on implementation.
+
 ## Examples
 See the following examples for integrating with our API and smart contract
 
@@ -167,7 +174,7 @@ Before running the example scripts you will need to rename the `.env.sample` to 
 	NODE_URL=YOUR_NODE_URL
 	API_ENDPOINT= https://kovan.itrust.insure/api
 	API_KEY=YOUR_API_KEY_SUPPLIED_BY_ITRUST
-	ITRUST_CONTRACT_ADDRESS=TBC
+	ITRUST_CONTRACT_ADDRESS=0x59E025A769840339EdbBe4905B0c42255CB5d501
 	TREASURY_ADDRESS=YOUR_TREASURY_ADDRESS_SUPPLIED_TO_ITRUST
 	PURCHASER_PRIVATE_KEY=YOUR_TEST_ADDRESS_PRIVATE_KEY_USED_TO_PURCHASE_COVER
 	QUOTE_EMAIL=YOUR_EMAIL_ADDRESS_FOR_THE_QUOTE
