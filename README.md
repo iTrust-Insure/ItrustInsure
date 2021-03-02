@@ -82,6 +82,7 @@ Example Response:
 
 ### Quotes
 Get a signed quote to use as part of the `buyCover` process
+Cover period must be a minimum of 30 days and maximum 365 days
 Example Call:
 
     curl --location --request POST '<INSERT API URL HERE>/quote' \
