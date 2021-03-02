@@ -89,6 +89,9 @@ const main = async () => {
             }
           );
 
+
+        console.log("Cover purchased");
+
         console.log("Getting Covers For User ", quote.id);
         var coversResponse = await fetch(`${getCoversEndpoint}${quote.id}`, coversRequestOptions);
         var coversAsText = await coversResponse.text();
