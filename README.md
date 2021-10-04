@@ -79,6 +79,30 @@ Example Response:
     	"NetStakedNXM": "12682.388440103005167",
     	"CapacityLimit": "STAKED_CAPACITY"
     }
+### Cover Assets
+Get the available cover assets to pass in as the `"currency"` field for the `/quote` endpoint below.
+
+Example call:
+
+	curl --location --request GET '<INSERT API URL HERE>/covers/cover-assets' \
+	--header 'x-api-key: <INSERT API KEY HERE>'
+
+Example Response:
+
+	[
+		{
+			"id": 1,
+			"symbol": "ETH",
+			"address": "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
+		},
+		{
+			"id": 2,
+			"symbol": "DAI",
+			"address": "0x5C422252C6a47CdacF667521566Bf7bD5b0d769B"
+		}
+	]	
+
+**Important** use the cover asset `symbol` to the quote `"currency"` field and the address as the `"coverAsset"` field of the buyCover contract call.
 
 ### Quotes
 Get a signed quote to use as part of the `buyCover` process
@@ -144,9 +168,18 @@ Example Response:
 ### kovan
     0xFfd4F1092E11a8Fd652a12c972235A42292580C1
 
+### Approval of ERC20 token spend
+If the user has selected an ERC20 token as the cover asset (anything other than ETH) a call must first be made to the cover asset to approve the iTrust Insure Smart Contract to spend the token on their behalf.
+
+Approve is a standard ERC20 token function:
+
+	function approve(address spender, uint256 amount) public virtual override returns (bool)
+
+**Important** The `spender` is the iTrust Insure Smart Contract Network Address above and the `amount` is the cover price returned from the quote.
+
 ### Buy Cover
 Allows users to buy NexusMutual cover.
-For the cover pricing, the contract call currently requires a quote signature provided by the itrust quote engine, 
+For the cover pricing, the contract call currently requires a quote signature provided by the itrust quote engine. 
 
     function  buyCover(
     	address exchangeAddress,
@@ -159,7 +192,9 @@ For the cover pricing, the contract call currently requires a quote signature pr
     	bytes calldata coverData 
     ) external  payable nonReentrant returns (uint256)
 coverData: Signature returned from quote api end point
+
 userGUID: id returned from quote api end point
+
 coverType: 0 (only zero supported) 
 
 See examples below for details on implementation.
@@ -181,7 +216,7 @@ Before running the example scripts you will need to rename the `.env.sample` to 
 	PURCHASER_PRIVATE_KEY=YOUR_TEST_ADDRESS_PRIVATE_KEY_USED_TO_PURCHASE_COVER
 	QUOTE_EMAIL=YOUR_EMAIL_ADDRESS_FOR_THE_QUOTE
 	QUOTE_COVER_AMOUNT=1
-	QUOTE_CURRENCY=ETH
+	QUOTE_CURRENCY=ETH // This has to be a symbol returned form the cover-assets endpoint
 	QUOTE_PERIOD=111 // Unit in days
 	QUOTE_CONTRACT_ADDRESS=THE_COVER_ADDRESS_FROM_GET_COVERS_CALL
 
@@ -208,6 +243,12 @@ Returns a list of covers from the API as detailed above. Located in the [example
 Returns the cover capacity from the API as detailed above. Located in the [examples\getCoverCapacity.js](examples/getCoverCapacity.js) script and can be run using the following command.
 
 	$ node examples\getCoverCapacity.js
+
+#### Get Cover Assets
+Returns the list of cover assets available. Located in the [examples\getCoverAssets.js](examples/getCoverAssets.js) script and can be run using the following command.
+
+	$ node examples\getCoverAssets.js
+
 
 #### Get Quote
 Returns a quote from the API as detailed above. Located in the [examples\getQuote.js](examples/getQuote.js) script and can be run using the following command.
