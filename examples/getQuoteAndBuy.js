@@ -6,6 +6,7 @@ require('custom-env').env();
 const COVER_TYPE = 0;
 
 const iTrustInsureAbi = require("./../abi/iTrustInsure.json");
+const ierc20Abi = require("./../abi/IERC20.json");
 const ethAddress = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 const web3 = new Web3( new Web3.providers.HttpProvider(process.env.NODE_URL) );
 const account = web3.eth.accounts.privateKeyToAccount(process.env.PURCHASER_PRIVATE_KEY);
@@ -49,11 +50,55 @@ const main = async () => {
         console.log("Quote data: ", quoteData);
         console.log("Request options: ", quoteRequestOptions);
         console.log("API endpoint: ", quoteEndpoint);
+
+        var coverAssetsResponse = await fetch(`${getCoversEndpoint}cover-assets`, coversRequestOptions);
+        var coverAssetsAsText = await coverAssetsResponse.text();
+        var coverAssets = JSON.parse(coverAssetsAsText);
+
+        console.log("Cover Assets", coverAssets);
+
+        var coverAsset = coverAssets.filter(c => c.symbol == process.env.QUOTE_CURRENCY).length > 0 
+                          ? coverAssets.filter(c => c.symbol == process.env.QUOTE_CURRENCY)[0] 
+                          : null;
+
+        if(coverAsset == null){
+          console.log("Unable to find cover asset for currency", process.env.QUOTE_CURRENCY);
+        }
+
+        console.log("Selected cover asset", coverAsset);
+
         var quoteResponse = await fetch(quoteEndpoint, quoteRequestOptions);
         var quoteAsText = await quoteResponse.text();
         var quote = JSON.parse(quoteAsText);
 
         console.log("Quote: ", quote);
+
+        var nonce = await web3.eth.getTransactionCount(account.address, "pending");
+
+        if(coverAsset.address != ethAddress){
+
+          const tokenContract = new web3.eth.Contract(
+              ierc20Abi,
+              coverAsset.address
+          );
+
+          console.log("Approving iTrust to spend", quote.price);
+
+          var approveResult = await tokenContract.methods.approve(
+            process.env.ITRUST_CONTRACT_ADDRESS, quote.price
+          ).send(
+            {
+              from: account.address, 
+              gas: 6000000,
+              nonce
+            }
+          );
+
+          console.log("Approved iTrust to spend", quote.price);
+
+        }
+
+        
         console.log("Buying cover");
 
         const amountInWei =  web3.utils.toWei(quote.amount);
@@ -61,7 +106,7 @@ const main = async () => {
         console.log("Buy params", { 
             treasuryAddress: process.env.TREASURY_ADDRESS,
             contract: quote.contract,
-            currency: ethAddress,
+            currency: coverAsset.address,
             ammountInWei: amountInWei,
             quoteAmount: quote.period,
             coverType: COVER_TYPE,      
@@ -69,12 +114,12 @@ const main = async () => {
             price: quote.price
         });
 
-        const nonce = await web3.eth.getTransactionCount(account.address, "pending");
-
+        nonce = await web3.eth.getTransactionCount(account.address, "pending");
+// console.log(quote.currency == 'ETH' ? quote.price : '0');
         var tx = await itrustContract.methods.buyCover(
             process.env.TREASURY_ADDRESS,
             quote.contract,
-            ethAddress,
+            coverAsset.address,
             amountInWei,
             quote.period,
             COVER_TYPE,
@@ -83,7 +128,7 @@ const main = async () => {
           .send(
             {
               from: account.address, 
-              value: (quote.price),
+              value: (coverAsset.address == ethAddress ? quote.price : '0'),
               gas: 6000000,
               nonce
             }
